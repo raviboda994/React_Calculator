@@ -6,7 +6,27 @@ on:
 env:
   AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
   ECS_SERVICE: react_calculator                  # set this to your Amazon ECS service name
-  ECS_CLUSTER: react_calculator                  # set this to your Amazon ECS cluster name
+  ECS_CLUSTER: reactcalculator                  # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: .aws/taskdefinition.json # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: react_calculator    
+
+jobs:
+  DeployOnECS:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
+        with:
+           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+           aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
