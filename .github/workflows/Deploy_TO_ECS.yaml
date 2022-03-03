@@ -1,0 +1,12 @@
+name: Deploy to Amazon ECS
+
+on:
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
+  ECS_SERVICE: react_calculator                  # set this to your Amazon ECS service name
+  ECS_CLUSTER: react_calculator                  # set this to your Amazon ECS cluster name
+  ECS_TASK_DEFINITION: .aws/taskdefinition.json # set this to the path to your Amazon ECS task definition
+                                               # file, e.g. .aws/task-definition.json
+  CONTAINER_NAME: react_calculator    
